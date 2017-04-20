@@ -12,6 +12,8 @@
 <header>
   <nav class="main-header">
 
+    <div id="ajax_spinner" class="loading-spinner ajax_spinner"><div class="dot1"></div><div class="dot2"></div><div class="dot3"></div></div>
+
     {* TODO: BUTTON USED FOR THE MOBILE VERSION TO REACTIVATE *}
     {* TODO: TO REPLACE
     <button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
@@ -65,11 +67,7 @@
     {/if}
     *}
 
-    {* TODO: REPLACE THE AJAX RUNNING SPINNER WITH THE ONE FROM THE UI KIT
-    <span id="ajax_running">
-      <i class="icon-refresh icon-spin icon-fw"></i>
-    </span>
-    *}
+
 
     {* TODO: ??? *}
     {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}

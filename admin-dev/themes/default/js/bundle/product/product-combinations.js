@@ -13,7 +13,6 @@ var combinations = (function() {
 
     modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
       onContinue: function() {
-
         var attributeId = elem.attr('data');
         $.ajax({
           type: 'DELETE',
@@ -21,6 +20,10 @@ var combinations = (function() {
           url: elem.attr('href'),
           beforeSend: function() {
             elem.attr('disabled', 'disabled');
+            $('#create-combinations').attr('disabled', 'disabled');
+            $('#apply-on-combinations').attr('disabled', 'disabled');
+            $('#submit', $('#form')).attr('disabled', 'disabled');
+            $('.btn-submit', $('#form')).attr('disabled', 'disabled');
           },
           success: function(response) {
             combinationElem.remove();
@@ -32,6 +35,10 @@ var combinations = (function() {
           },
           complete: function() {
             elem.removeAttr('disabled');
+            $('#create-combinations').removeAttr('disabled');
+            $('#apply-on-combinations').removeAttr('disabled');
+            $('#submit', $('#form')).removeAttr('disabled');
+            $('.btn-submit', $('#form')).removeAttr('disabled');
             supplierCombinations.refresh();
             warehouseCombinations.refresh();
             if ($('.js-combinations-list .combination').length <= 0) {

@@ -4,6 +4,20 @@
 $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();
     rightSidebar.init();
+
+    /** spinner loading */
+    $(this).ajaxStart(function ()
+    {
+        $('#ajax_spinner').show();
+    });
+    $(this).ajaxStop(function ()
+    {
+        $('#ajax_spinner').hide();
+    });
+    $(this).ajaxError(function ()
+    {
+        $('#ajax_spinner').hide();
+    });
 });
 
 var rightSidebar = (function() {
