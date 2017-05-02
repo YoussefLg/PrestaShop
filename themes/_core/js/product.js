@@ -42,7 +42,13 @@ $(document).ready(function () {
         eventType = extraParameters.eventType;
       }
 
-      var query = $(event.target.form).serialize() + '&ajax=1&action=productrefresh';
+        var param = getRequestParameter('preview');
+        if(param !== null){
+            param = '&preview=' + param;
+        }else{
+            param = '';
+        }
+      var query = $(event.target.form).serialize() + '&ajax=1&action=productrefresh' + param;
       var actionURL = $(event.target.form).attr('action');
 
       $.post(actionURL, query, null, 'json').then(function(resp) {
@@ -132,3 +138,18 @@ $(document).ready(function () {
     });
   });
 });
+
+function getRequestParameter(param) {
+    var vars = {};
+    window.location.href.replace( location.hash, '' ).replace(
+        /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+        function( m, key, value ) { // callback
+            vars[key] = value !== undefined ? value : '';
+        }
+    );
+
+    if ( param ) {
+        return vars[param] ? vars[param] : null;
+    }
+    return vars;
+}

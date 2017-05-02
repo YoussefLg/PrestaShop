@@ -42,14 +42,14 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__(1);
 
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -95,9 +95,9 @@
 	  (0, _common.psShowHide)();
 	});
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	 * jQuery JavaScript Library v2.2.4
@@ -1674,9 +1674,9 @@
 	// and CommonJS for browser emulators (#13566)
 	if(!noGlobal){window.jQuery = window.$ = jQuery;}return jQuery;}); // Otherwise append directly
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1822,15 +1822,15 @@
 	  });
 	});
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = prestashop;
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1917,9 +1917,9 @@
 	  }
 	});
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1971,9 +1971,9 @@
 	
 	module.exports = exports['default'];
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2047,9 +2047,9 @@
 	
 	module.exports = exports['default'];
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2207,9 +2207,9 @@
 	
 	module.exports = exports['default'];
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2280,9 +2280,9 @@
 	    });
 	});
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2329,9 +2329,9 @@
 	  });
 	});
 
-/***/ },
+/***/ }),
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2383,9 +2383,16 @@
 	      eventType = extraParameters.eventType;
 	    }
 	
-	    var query = (0, _jquery2['default'])(event.target.form).serialize() + '&ajax=1&action=productrefresh';
+	    var param = getRequestParameter('preview');
+	    if (param !== null) {
+	      param = '&preview=' + param;
+	    } else {
+	      param = '';
+	    }
+	    var query = (0, _jquery2['default'])(event.target.form).serialize() + '&ajax=1&action=productrefresh' + param;
 	    var actionURL = (0, _jquery2['default'])(event.target.form).attr('action');
 	
+	    console.log(query);
 	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
 	      _prestashop2['default'].emit('updateProduct', {
 	        reason: {
@@ -2472,10 +2479,24 @@
 	    });
 	  });
 	});
+	
+	function getRequestParameter(param) {
+	  var vars = {};
+	  window.location.href.replace(location.hash, '').replace(/[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+	  function (m, key, value) {
+	    // callback
+	    vars[key] = value !== undefined ? value : '';
+	  });
+	
+	  if (param) {
+	    return vars[param] ? vars[param] : null;
+	  }
+	  return vars;
+	}
 
-/***/ },
+/***/ }),
 /* 12 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -2533,9 +2554,9 @@
 	  });
 	});
 
-/***/ },
+/***/ }),
 /* 13 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
 	//
@@ -2805,9 +2826,9 @@
 	  return arg === void 0;
 	}
 
-/***/ },
+/***/ }),
 /* 14 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2851,6 +2872,6 @@
 	  (0, _jquery2['default'])('.ps-hidden-by-js').hide();
 	}
 
-/***/ }
+/***/ })
 /******/ ]);
 //# sourceMappingURL=core.js.map

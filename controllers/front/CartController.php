@@ -35,6 +35,7 @@ class CartControllerCore extends FrontController
     protected $id_address_delivery;
     protected $customization_id;
     protected $qty;
+    protected $preview;
     public $ssl = true;
 
     /**
@@ -63,6 +64,7 @@ class CartControllerCore extends FrontController
         $this->customization_id = (int)Tools::getValue('id_customization');
         $this->qty = abs(Tools::getValue('qty', 1));
         $this->id_address_delivery = (int)Tools::getValue('id_address_delivery');
+        $this->preview = Tools::getValue('preview',0);
     }
 
     /**
@@ -153,7 +155,7 @@ class CartControllerCore extends FrontController
                 false,
                 false,
                 true,
-                ['quantity_wanted' => (int)$this->qty]
+                ['quantity_wanted' => (int)$this->qty, 'preview' => $this->preview]
             );
         } else {
             $url = false;
