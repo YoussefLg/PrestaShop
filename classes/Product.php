@@ -4957,7 +4957,8 @@ class ProductCore extends ObjectModel
 			SELECT cf.`id_customization_field`, cf.`type`, cf.`required`, cfl.`name`, cfl.`id_lang`
 			FROM `'._DB_PREFIX_.'customization_field` cf
 			NATURAL JOIN `'._DB_PREFIX_.'customization_field_lang` cfl
-			WHERE cf.`id_product` = '.(int)$this->id.($id_lang ? ' AND cfl.`id_lang` = '.(int)$id_lang : '').
+			WHERE cf.deleted = 0 
+			AND cf.`id_product` = '.(int)$this->id.($id_lang ? ' AND cfl.`id_lang` = '.(int)$id_lang : '').
                 ($id_shop ? ' AND cfl.`id_shop` = '.(int)$id_shop : '').
                 ($front ? ' AND !cf.`is_module`' : '').'
 			ORDER BY cf.`id_customization_field`')) {
@@ -6309,6 +6310,28 @@ class ProductCore extends ObjectModel
             case '302-product':
                 return 'product';
                 break;
+        }
+
+        return false;
+    }
+
+    /**
+     * check if product has an activated and required customizationFields 
+     * @return bool
+     * @throws \PrestaShopDatabaseException
+     */
+    public function hasActivatedRequiredCustomizableFields(){
+        if (!Customization::isFeatureActive()) {
+            return false;
+        }
+        if($result = Db::getInstance()->executeS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'customization_field`
+			WHERE `id_product` = '.(int)$this->id.'
+			AND `required` = 1
+			AND `deleted` = 0'
+        )){
+            return true;
         }
 
         return false;

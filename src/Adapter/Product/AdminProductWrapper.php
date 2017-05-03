@@ -465,19 +465,39 @@ class AdminProductWrapper
 
         $shopList = \ShopCore::getContextListShopID();
 
+        // Update the customization fields to be deleted in the next step
+        $updateQuery = 'UPDATE ' . _DB_PREFIX_ . 'customization_field cf
+            INNER JOIN ' . _DB_PREFIX_ . 'customized_data cd ON cd.index <> cf.id_customization_field 
+            SET cf.deleted = 0 
+            WHERE 
+            cf.deleted = 1 ';
+        \Db::getInstance()->execute($updateQuery);
+        // update deleted customization
+        $updateQuery = 'UPDATE ' . _DB_PREFIX_ . 'customization_field cf
+            INNER JOIN ' . _DB_PREFIX_ . 'customized_data cd ON cd.index = cf.id_customization_field 
+            SET cf.deleted = 1 
+            WHERE 
+            cf.deleted = 0 
+            AND cf.id_product = '.(int)$product->id;
+        $updateQuery .= empty($customization_ids) ? '' : ' AND cf.id_customization_field NOT IN ('.implode(",", $customization_ids).')';
+        \Db::getInstance()->execute($updateQuery);
+
+
         //remove customization field langs for current context shops
         foreach ($product->getCustomizationFieldIds() as $customizationFiled) {
             //if the customization_field is still in use, only delete the current context shops langs,
             //else delete all the langs
-            \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field_lang WHERE 
-			`id_customization_field` = '.(int)$customizationFiled['id_customization_field'].
-            (in_array((int)$customizationFiled['id_customization_field'], $customization_ids) ? ' AND `id_shop` IN ('.implode(',', $shopList).')' : ''));
+            \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field_lang 
+            WHERE id_customization_field = '.(int)$customizationFiled['id_customization_field'].
+            ' AND 0 <> (SELECT count(*) FROM '._DB_PREFIX_.'customization_field WHERE deleted = 0 AND id_customization_field = '.(int)$customizationFiled['id_customization_field'].')'.
+            (in_array((int)$customizationFiled['id_customization_field'], $customization_ids) ? ' AND id_shop IN ('.implode(',', $shopList).')' : ''));
         }
 
         //remove unused customization for the product
         if (!empty($customization_ids)) {
             \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field WHERE 
-            `id_product` = '.(int)$product->id.' AND `id_customization_field` NOT IN ('.implode(",", $customization_ids).')');
+            deleted = 0
+            AND `id_product` = '.(int)$product->id.' AND `id_customization_field` NOT IN ('.implode(",", $customization_ids).')');
         }
 
         //create new customizations
