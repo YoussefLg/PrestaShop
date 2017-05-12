@@ -306,18 +306,25 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         }
 
         //map features
+        usort($form_data['features'], $this->sortFeatures('feature'));
         if (!empty($form_data['features'])) {
+            $oldIdFeature = -1;
             foreach ($form_data['features'] as $dataFeature) {
                 $idFeature = $dataFeature['feature'];
+                if($oldIdFeature != $idFeature) {
+                    $counter = 0;
+                    $oldIdFeature =$idFeature;
+                }
 
                 //custom value is defined
                 if ($dataFeature['custom_value'][$this->defaultLocale]) {
                     foreach ($this->locales as $locale) {
-                        $form_data['feature_'.$idFeature.'_value'] = null;
-                        $form_data['custom_'.$idFeature.'_'.$locale['id_lang']] = $dataFeature['custom_value'][$locale['id_lang']];
+                        $form_data['feature_'.$idFeature.'__value'] = null;
+                        $form_data['custom_'.$idFeature.'_'.$locale['id_lang'].'_'.$counter]= $dataFeature['custom_value'][$locale['id_lang']];
+                        $counter++;
                     }
-                } elseif ($dataFeature['value']) {
-                    $form_data['feature_'.$idFeature.'_value'] = $dataFeature['value'];
+                } elseif (isset($dataFeature['value']) && $dataFeature['value']) {
+                    $form_data['feature_'.$idFeature.'_'.$dataFeature['value'].'_value'] = $dataFeature['value'];
                 }
             }
         }
@@ -755,5 +762,16 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $tags[$locale['id_lang']] = $this->product->getTags($locale['id_lang']);
         }
         return $tags;
+    }
+
+    /**
+     * Sorting of a matrix
+     * @param $key
+     * @return \Closure
+     */
+    private function sortFeatures($key) {
+        return function ($a, $b) use ($key) {
+            return strnatcmp($a[$key], $b[$key]);
+        };
     }
 }

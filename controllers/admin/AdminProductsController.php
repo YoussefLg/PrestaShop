@@ -865,26 +865,46 @@ class AdminProductsControllerCore extends AdminController
             $product->deleteFeatures();
 
             // add new objects
-            $languages = Language::getLanguages(false);
-            foreach ($_POST as $key => $val) {
-                if (preg_match('/^feature_([0-9]+)_value/i', $key, $match)) {
-                    if ($val) {
-                        $product->addFeaturesToDB($match[1], $val);
-                    } else {
-                        if ($default_value = $this->checkFeatures($languages, $match[1])) {
-                            $id_value = $product->addFeaturesToDB($match[1], 0, 1);
-                            foreach ($languages as $language) {
-                                if ($cust = Tools::getValue('custom_'.$match[1].'_'.(int)$language['id_lang'])) {
-                                    $product->addFeaturesCustomToDB($id_value, (int)$language['id_lang'], $cust);
-                                } else {
-                                    $product->addFeaturesCustomToDB($id_value, (int)$language['id_lang'], $default_value);
+            $languages = Language::getLanguages( FALSE );
+            $oldIdFeature = - 1;
+            $counter = 0;
+            foreach ( $_POST as $key => $val ) {
+                if ( preg_match( '/^feature_([0-9]+)_([0-9]+|)_value/i', $key, $match ) ) {
+                    if ( $oldIdFeature != $match[1] ) {
+                        $oldIdFeature = $match[1];
+                        $counter = 0;
+                    }
+                    if ( $val ) {
+                        $product->addFeaturesToDB( $match[1], $val );
+                    }
+                    else {
+                        if ( $default_value = $this->checkFeatures( $languages, $match[1] ) ) {
+                            while (TRUE) {
+                                $id_value = $product->addFeaturesToDB( $match[1], 0, 1 );
+                                $hasNextCustom = FALSE;
+                                foreach ( $languages as $language ) {
+                                    if ( $cust = Tools::getValue( 'custom_' . $match[1] . '_' . (int) $language['id_lang'] . '_' . $counter ) ) {
+                                        $product->addFeaturesCustomToDB( $id_value, (int) $language['id_lang'], $cust );
+                                    }
+                                    else{
+                                        $product->addFeaturesCustomToDB( $id_value, (int) $language['id_lang'], $default_value );
+                                    }
+
+                                    if(Tools::getValue('custom_'.$match[1].'_'.(int)$language['id_lang'].'_'.($counter+1))){
+                                        $hasNextCustom = TRUE;
+                                    }
                                 }
+                                if(!$hasNextCustom){
+                                    break;
+                                }
+                                $counter ++;
                             }
                         }
                     }
                 }
             }
-        } else {
+        }
+        else {
             $this->errors[] = $this->trans('A product must be created before adding features.', array(), 'Admin.Catalog.Notification');
         }
     }
@@ -1576,37 +1596,47 @@ class AdminProductsControllerCore extends AdminController
     {
         $rules = call_user_func(array('FeatureValue', 'getValidationRules'), 'FeatureValue');
         $feature = Feature::getFeature((int)Configuration::get('PS_LANG_DEFAULT'), $feature_id);
+        $counter =0;
 
-        foreach ($languages as $language) {
-            if ($val = Tools::getValue('custom_'.$feature_id.'_'.$language['id_lang'])) {
-                $current_language = new Language($language['id_lang']);
-                if (Tools::strlen($val) > $rules['sizeLang']['value']) {
-                    $this->errors[] = $this->trans(
-                        'The name for feature %1$s is too long in %2$s.',
-                        array(
-                            ' <b>'.$feature['name'].'</b>',
+        while(TRUE) {
+            $hasNextCustom = FALSE;
+            foreach ( $languages as $language ) {
+                if ( $val = Tools::getValue( 'custom_' . $feature_id . '_' . $language['id_lang'].'_'.$counter ) ) {
+                    $current_language = new Language( $language['id_lang'] );
+                    if ( Tools::strlen( $val ) > $rules['sizeLang']['value'] ) {
+                        $this->errors[] = $this->trans( 'The name for feature %1$s is too long in %2$s.', array(
+                            ' <b>' . $feature['name'] . '</b>',
                             $current_language->name
-                        ),
-                        'Admin.Catalog.Notification'
-                    );
-                } elseif (!call_user_func(array('Validate', $rules['validateLang']['value']), $val)) {
-                    $this->errors[] = $this->trans('A valid name required for feature. %1$s in %2$s.',
-                        array(
-                            ' <b>'.$feature['name'].'</b>',
+                          ), 'Admin.Catalog.Notification' );
+                    }
+                    elseif ( !call_user_func( array(
+                      'Validate',
+                      $rules['validateLang']['value']
+                    ), $val )
+                    ) {
+                        $this->errors[] = $this->trans( 'A valid name required for feature. %1$s in %2$s.', array(
+                            ' <b>' . $feature['name'] . '</b>',
                             $current_language->name
-                        ),
-                        'Admin.Catalog.Notification'
-                    );
+                          ), 'Admin.Catalog.Notification' );
+                    }
+                    if ( count( $this->errors ) ) {
+                        return 0;
+                    }
+                    // Getting default language
+                    if ( $language['id_lang'] == Configuration::get( 'PS_LANG_DEFAULT' ) ) {
+                        return $val;
+                    }
                 }
-                if (count($this->errors)) {
-                    return 0;
-                }
-                // Getting default language
-                if ($language['id_lang'] == Configuration::get('PS_LANG_DEFAULT')) {
-                    return $val;
+                if(Tools::getValue( 'custom_' . $feature_id . '_' . $language['id_lang'].'_'.($counter+1) )){
+                    $hasNextCustom = TRUE;
                 }
             }
+            if(!$hasNextCustom){
+                break;
+            }
+            $counter++;
         }
+
         return 0;
     }
 

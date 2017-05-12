@@ -431,6 +431,7 @@
     @include display(flex);
     @include flex-wrap(wrap);
     @include align-items(flex-start);
+    align-items: stretch;
     dd.value,
     dt.name {
       @include flex(1 0 40%);
@@ -439,13 +440,13 @@
       padding: $small-space;
       margin-right: $small-space;
       min-height: rem(40px);
-      word-break: break-word;
       &:nth-of-type(even) {
         background: $gray-lighter;
       }
     }
     dt.name {
       text-transform: capitalize;
+      margin-bottom: .5rem;
     }
   }
 }
