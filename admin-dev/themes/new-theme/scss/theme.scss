@@ -85,3 +85,7 @@ $color-icons: #6c868e;
     }
   }
 }
+
+#product_filter_column_active span.select2{
+  min-width: rem(70px);
+}
