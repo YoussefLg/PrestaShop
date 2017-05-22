@@ -1043,3 +1043,20 @@
     }
   }
 }
+
+
+#form_step2_specific_price_sp_id_customer-data {
+  border: rem(1px) solid #e5e5e5;
+  border-radius: rem(2px);
+  margin: rem(5px) rem(0px);
+  padding: rem(10px);
+  display: none;
+  .title{
+    margin: inherit;
+    padding: inherit;
+  }
+  .delete{
+    float: right;
+    cursor: pointer;
+  }
+}
