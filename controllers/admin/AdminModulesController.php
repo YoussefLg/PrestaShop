@@ -1129,6 +1129,12 @@ class AdminModulesControllerCore extends AdminController
     public function postProcess()
     {
         if (!Tools::getIsset('configure') && !Tools::getIsset('module_name')) {
+            /** add filterCategory into request params to redirect to symfony modulesController */
+            if($filterCategory = Tools::getValue('filterCategory')){
+                Tools::redirectAdmin($this->context->link->getAdminLink('AdminModulesSf',true,array(),array(
+                  'filterCategory' => $filterCategory
+                )));
+            }
             Tools::redirectAdmin($this->context->link->getAdminLink('AdminModulesSf'));
         }
         // Parent Post Process

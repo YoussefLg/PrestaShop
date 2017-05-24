@@ -729,7 +729,7 @@ class LinkCore
                     return $sfRouter->generate($sfRouteParams['route'], array(), UrlGeneratorInterface::ABSOLUTE_URL);
                 }
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                return $sfRouter->generate('admin_module_catalog', array(), UrlGeneratorInterface::ABSOLUTE_URL);
+                return $sfRouter->generate('admin_module_catalog', $params, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $idLang = Context::getContext()->language->id;

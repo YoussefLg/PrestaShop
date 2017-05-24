@@ -115,6 +115,15 @@ class ModuleController extends FrameworkBundleAdminController
                 $moduleRepository->getFilteredList($filters)
             );
 
+            /** filtered the list of modules by category */
+            if($filterCategory = $request->query->get('filterCategory',false)){
+                foreach ($modules as $key => $module){
+                    if($filterCategory != $module->attributes->get('tab')){
+                        unset($modules[$key]);
+                    }
+                }
+            }
+
             $categoriesMenu = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
             shuffle($modules);
             $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categoriesMenu, $modules);
