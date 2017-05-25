@@ -482,6 +482,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
             } elseif ($this->display != 'view' && !$this->ajax) {
                 $this->content .= $this->renderList();
                 $this->content .= $this->renderOptions();
+
+                /** reset all attributes filter */
+                if(!Tools::getValue('submitFilterattribute_group',0) && !Tools::getIsset('id_attribute_group')){
+                    $this->processResetFilters('attribute_values');
+                }
             } elseif ($this->display == 'view' && !$this->ajax) {
                 $this->content = $this->renderView();
             }
@@ -715,6 +720,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
             $this->table = 'attribute';
             $this->className = 'Attribute';
             $this->identifier = 'id_attribute';
+        }
+
+        /** if filter submited */
+        if (Tools::isSubmit('submitFilter') && Tools::getIsset('id_attribute_group')){
+            self::$currentIndex = self::$currentIndex.'&id_attribute_group='.Tools::getValue('id_attribute_group',0).'&viewattribute_group';
+            $this->processFilter();
         }
 
         // If it's an attribute, load object Attribute()
