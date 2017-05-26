@@ -722,10 +722,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
             $this->identifier = 'id_attribute';
         }
 
-        /** if filter submited */
-        if (Tools::isSubmit('submitFilter') && Tools::getIsset('id_attribute_group')){
+        /** set location with current index */
+        if(Tools::getIsset('id_attribute_group') && Tools::getIsset('viewattribute_group')){
             self::$currentIndex = self::$currentIndex.'&id_attribute_group='.Tools::getValue('id_attribute_group',0).'&viewattribute_group';
-            $this->processFilter();
         }
 
         // If it's an attribute, load object Attribute()
