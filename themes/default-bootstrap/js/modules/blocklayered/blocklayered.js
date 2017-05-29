@@ -633,7 +633,7 @@ function initLocationChange(func, time)
 		if(getUrlParams() != current_friendly_url && !lockLocationChecking)
 		{
 			// Don't reload page if current_friendly_url and real url match
-			if (current_friendly_url.replace(/^#(\/)?/, '') == getUrlParams().replace(/^#(\/)?/, ''))
+			if (isSameLocation(current_friendly_url.replace(/^#(\/)?/, ''), getUrlParams().replace(/^#(\/)?/, '')))
 				return;
 
 			lockLocationChecking = true;
@@ -645,6 +645,22 @@ function initLocationChange(func, time)
 			current_friendly_url = getUrlParams();
 		}
 	}, time);
+}
+
+/**
+ * Compare two location without pagination param, if is same
+ * @param friendlyUrl
+ * @param urlParams
+ * @returns {boolean}
+ */
+function isSameLocation(friendlyUrl, urlParams){
+	if(friendlyUrl == urlParams) {
+		return true;
+	}else if(friendlyUrl.replace(/(\/page-)([0-9]*)$/,'') == urlParams.replace(/(\/page-)([0-9]*)$/,'')){
+		return true;
+	}
+
+	return false;
 }
 
 function getUrlParams()
