@@ -289,7 +289,7 @@ class ProductCore extends ObjectModel
             'weight' =>                    array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
             'quantity_discount' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'ean13' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
-            'isbn' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 13),
+            'isbn' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32),
             'upc' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
             'cache_is_pack' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'cache_has_attachments' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),

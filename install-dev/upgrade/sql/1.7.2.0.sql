@@ -14,3 +14,9 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayWrapperBottom', 'Main wrapper section (bottom)', 'This hook displays new elements in the bottom of the main wrapper', '1'),
   (NULL, 'displayContentWrapperTop', 'Content wrapper section (top)', 'This hook displays new elements in the top of the content wrapper', '1'),
   (NULL, 'displayContentWrapperBottom', 'Content wrapper section (bottom)', 'This hook displays new elements in the bottom of the content wrapper', '1');
+
+ALTER TABLE `PREFIX_product` ADD `isbn` VARCHAR( 32 ) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_order_detail` ADD `product_isbn` VARCHAR( 32 ) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_product_attribute` ADD `isbn` VARCHAR( 32 ) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_stock` ADD `isbn` VARCHAR( 32 ) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_supply_order_detail` ADD `isbn` VARCHAR( 32 ) NULL DEFAULT NULL;
