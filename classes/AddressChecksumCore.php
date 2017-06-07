@@ -45,7 +45,11 @@ class AddressChecksumCore implements ChecksumInterface
         }
 
         $uniqId = '';
-        $fields = $address->getFields();
+        try {
+            $fields = $address->getFields();
+        } catch (Exception $e) {
+            throw new Exception('Your address is incomplete, please update it.');
+        }
         foreach ($fields as $name => $value) {
             $uniqId .= $value.self::SEPARATOR;
         }

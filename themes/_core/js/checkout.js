@@ -69,4 +69,17 @@ $(document).ready(() => {
   if ($('#checkout').length === 1) {
     setUpCheckout();
   }
+if(0 < $('.js-address-error').length){
+    var idFailureAddress = $(".js-address-error").prop('id').split('-').pop();
+    if($(".js-address-error").attr('name').split('-').pop() == "delivery") {
+        $('#id-address-delivery-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #2fb5d2 !important');
+    }else {
+        $('#id-address-invoice-address-' + idFailureAddress + ' a.edit-address').prop('style', 'color: #2fb5d2 !important');
+    }
+    $('button[name=confirm-addresses]').prop('disabled','disabled');
+}
+});
+
+$('.js-address-selector input[type=radio]:not(:checked)').on('click',function(){
+    $('button[name=confirm-addresses]').prop("disabled","");
 });

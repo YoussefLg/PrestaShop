@@ -31,6 +31,7 @@ class OrderControllerCore extends FrontController
     public $ssl = true;
     public $php_self = 'order';
     public $page_name = 'checkout';
+    public $checkoutWarning = false;
 
     protected $checkoutProcess;
 
@@ -150,7 +151,11 @@ class OrderControllerCore extends FrontController
     private function saveDataToPersist(CheckoutProcess $process)
     {
         $data = $process->getDataToPersist();
-        $data['checksum'] = $this->cartChecksum->generateChecksum($this->context->cart);
+        if (is_array($checksum = $this->cartChecksum->generateChecksum($this->context->cart))) {
+            $data['checksum'] = null;
+        } else {
+            $data['checksum'] = $checksum;
+        }
 
         Db::getInstance()->execute(
             'UPDATE '._DB_PREFIX_.'cart SET checkout_session_data = "'.pSQL(json_encode($data)).'"
@@ -168,7 +173,14 @@ class OrderControllerCore extends FrontController
             $data = [];
         }
 
-        $checksum = $this->cartChecksum->generateChecksum($this->context->cart);
+        if (is_array($checksum = $this->cartChecksum->generateChecksum($this->context->cart))) {
+            $this->checkoutWarning['address'] = array(
+              'id_address' => $checksum['id_address'],
+              'exception' => $checksum['exception'],
+            );
+            $checksum = null;
+        }
+
         if (isset($data['checksum']) && $data['checksum'] === $checksum) {
             $process->restorePersistedData($data);
         }
