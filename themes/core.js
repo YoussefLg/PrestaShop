@@ -2433,6 +2433,13 @@
 	        targetSelector: productAvailabilitySelector
 	      });
 	
+	      var productAvailabilityMessageSelector = '#product-availability';
+	      replaceAddToCartSection({
+	        $addToCartSnippet: $addToCartSnippet,
+	        $targetParent: $addProductToCart,
+	        targetSelector: productAvailabilityMessageSelector
+	      });
+	
 	      var productMinimalQuantitySelector = '.product-minimal-quantity';
 	      replaceAddToCartSection({
 	        $addToCartSnippet: $addToCartSnippet,
