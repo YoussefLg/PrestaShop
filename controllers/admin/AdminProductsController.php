@@ -879,26 +879,16 @@ class AdminProductsControllerCore extends AdminController
                     }
                     else {
                         if ( $default_value = $this->checkFeatures( $languages, $match[1] ) ) {
-                            while (TRUE) {
+                            $hasNextCustom = FALSE;
+                            do {
                                 $id_value = $product->addFeaturesToDB( $match[1], 0, 1 );
-                                $hasNextCustom = FALSE;
-                                foreach ( $languages as $language ) {
-                                    if ( $cust = Tools::getValue( 'custom_' . $match[1] . '_' . (int) $language['id_lang'] . '_' . $counter ) ) {
-                                        $product->addFeaturesCustomToDB( $id_value, (int) $language['id_lang'], $cust );
-                                    }
-                                    else{
-                                        $product->addFeaturesCustomToDB( $id_value, (int) $language['id_lang'], $default_value );
-                                    }
-
-                                    if(Tools::getValue('custom_'.$match[1].'_'.(int)$language['id_lang'].'_'.($counter+1))){
-                                        $hasNextCustom = TRUE;
-                                    }
-                                }
-                                if(!$hasNextCustom){
-                                    break;
+                                foreach ($languages as $language) {
+                                    $customFeature = Tools::getValue('custom_' . $match[1] . '_' . (int) $language['id_lang'] . '_' . $counter);
+                                    $product->addFeaturesCustomToDB($id_value, (int) $language['id_lang'], ($customFeature ? $customFeature : $default_value));
+                                    $hasNextCustom = Tools::getIsset('custom_' . $match[1] . '_' . (int) $language['id_lang'] . '_' . ($counter + 1));
                                 }
                                 $counter ++;
-                            }
+                            } while ($hasNextCustom);
                         }
                     }
                 }
@@ -1597,9 +1587,8 @@ class AdminProductsControllerCore extends AdminController
         $rules = call_user_func(array('FeatureValue', 'getValidationRules'), 'FeatureValue');
         $feature = Feature::getFeature((int)Configuration::get('PS_LANG_DEFAULT'), $feature_id);
         $counter =0;
-
-        while(TRUE) {
-            $hasNextCustom = FALSE;
+        $hasNextCustom = FALSE;
+        do{
             foreach ( $languages as $language ) {
                 if ( $val = Tools::getValue( 'custom_' . $feature_id . '_' . $language['id_lang'].'_'.$counter ) ) {
                     $current_language = new Language( $language['id_lang'] );
@@ -1627,15 +1616,10 @@ class AdminProductsControllerCore extends AdminController
                         return $val;
                     }
                 }
-                if(Tools::getValue( 'custom_' . $feature_id . '_' . $language['id_lang'].'_'.($counter+1) )){
-                    $hasNextCustom = TRUE;
-                }
-            }
-            if(!$hasNextCustom){
-                break;
+                $hasNextCustom = (bool) Tools::getIsset('custom_' . $feature_id . '_' . $language['id_lang'].'_'.($counter+1));
             }
             $counter++;
-        }
+        }while($hasNextCustom);
 
         return 0;
     }

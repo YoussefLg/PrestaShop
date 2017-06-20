@@ -321,8 +321,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                     foreach ($this->locales as $locale) {
                         $form_data['feature_'.$idFeature.'__value'] = null;
                         $form_data['custom_'.$idFeature.'_'.$locale['id_lang'].'_'.$counter]= $dataFeature['custom_value'][$locale['id_lang']];
-                        $counter++;
                     }
+                    $counter++;
                 } elseif (isset($dataFeature['value']) && $dataFeature['value']) {
                     $form_data['feature_'.$idFeature.'_'.$dataFeature['value'].'_value'] = $dataFeature['value'];
                 }
