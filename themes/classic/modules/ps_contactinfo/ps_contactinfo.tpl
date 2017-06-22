@@ -56,7 +56,7 @@
         <br>
         {* [1][/1] is for a HTML tag. *}
         {l
-          s='Email us: [1]%email%[/1]'
+          s='Email us: <a href="mailto:%email%">[1]%email%[/1]</a>'
           sprintf=[
             '[1]' => '<span>',
             '[/1]' => '</span>',
