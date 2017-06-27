@@ -89,6 +89,7 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
             'color' => $attribute['color'],
             'position' => $attribute['attributePosition'],
             'name' => $attribute['attributeName'],
+            'texture' => (@filemtime(_PS_COL_IMG_DIR_.$attribute['id'].'.jpg')) ? _THEME_COL_DIR_.$attribute['id'].'.jpg' : '',
         );
     }
 }
