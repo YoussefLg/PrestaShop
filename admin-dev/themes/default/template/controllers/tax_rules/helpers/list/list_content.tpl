@@ -97,7 +97,7 @@
 					{elseif $key == 'rate'}
 						{$tr.$key|string_format:"%.3f"}%
 					{elseif $key == 'zipcode'}
-						{if $tr.$key == '0 - 0'}
+						{if in_array($tr.$key, array('0 - 0', ' - 0'))}
 							--
 						{else}
 							{$tr.$key|escape:'html':'UTF-8'}
