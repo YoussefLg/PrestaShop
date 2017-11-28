@@ -155,6 +155,7 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
             array(false, 123456789),
             array(false, false),
             array(false, 'pubé@prestashop.com'),
+            array(true, 'remi@домен.com.ua'),
         );
     }
 
